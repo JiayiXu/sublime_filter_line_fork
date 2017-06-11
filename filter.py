@@ -51,6 +51,10 @@ class FilterToLinesCommand(sublime_plugin.TextCommand):
     def run(self, edit, needle, search_type, invert_search, path_normal=False):
         settings = sublime.load_settings(settings_path)
         flags = self.get_search_flags(search_type, settings)
+        if not needle:
+            v = self.view
+            needle = v.substr(v.sel()[0])
+
         lines = itertools.groupby(self.view.find_all(needle, flags), self.view.line)
         if path_normal:
             new_needle = None
