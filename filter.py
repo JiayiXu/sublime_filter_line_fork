@@ -66,7 +66,7 @@ class FilterToLinesCommand(sublime_plugin.TextCommand):
 
             if new_needle:
                 new_lines = itertools.groupby(self.view.find_all(new_needle, flags), self.view.line)
-                for l in new_lines:
+                for l, _ in new_lines:
                     lines.append(l)
         
         self.line_numbers = settings.get('line_numbers', False)
