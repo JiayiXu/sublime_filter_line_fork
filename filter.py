@@ -48,10 +48,20 @@ class PromptFilterToLinesCommand(sublime_plugin.WindowCommand):
 
 class FilterToLinesCommand(sublime_plugin.TextCommand):
 
-    def run(self, edit, needle, search_type, invert_search):
+    def run(self, edit, needle, search_type, invert_search, path_normal=False):
         settings = sublime.load_settings(settings_path)
         flags = self.get_search_flags(search_type, settings)
         lines = itertools.groupby(self.view.find_all(needle, flags), self.view.line)
+        if path_normal:
+            new_needle = None
+            if '/' in needle:
+                new_needle = needle.replace('/', r'\\')
+            elif r'\\' in needle:
+                new_needle = needle.replace(r'\\', '/')
+
+            if new_needle:
+                lines.extend(itertools.groupby(self.view.find_all(new_needle, flags), self.view.line))
+
         lines = [l for l, _ in lines]
         self.line_numbers = settings.get('line_numbers', False)
         self.new_tab = settings.get('create_new_tab', True)

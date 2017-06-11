@@ -1,3 +1,4 @@
 [
    { "caption": "Filter Lines", "command": "filter_to_lines", "args": {"search_type": "string", "needle": "list", "invert_search": false} }
+   { "caption": "Filter By Path", "command": "filter_to_lines", "args": {"search_type": "string", "needle": "list", "invert_search": false, "path_normal": true} }
 ]
