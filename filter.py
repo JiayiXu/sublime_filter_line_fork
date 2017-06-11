@@ -56,6 +56,7 @@ class FilterToLinesCommand(sublime_plugin.TextCommand):
             needle = v.substr(v.sel()[0])
 
         lines = itertools.groupby(self.view.find_all(needle, flags), self.view.line)
+        lines = [l for l, _ in lines]
         if path_normal:
             new_needle = None
             if '/' in needle:
@@ -64,9 +65,10 @@ class FilterToLinesCommand(sublime_plugin.TextCommand):
                 new_needle = needle.replace(r'\\', '/')
 
             if new_needle:
-                lines.extend(itertools.groupby(self.view.find_all(new_needle, flags), self.view.line))
-
-        lines = [l for l, _ in lines]
+                new_lines = itertools.groupby(self.view.find_all(new_needle, flags), self.view.line)
+                for l in new_lines:
+                    lines.append(l)
+        
         self.line_numbers = settings.get('line_numbers', False)
         self.new_tab = settings.get('create_new_tab', True)
         self.invert_search = invert_search ^ (not self.new_tab)
